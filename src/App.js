@@ -9,7 +9,7 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Welcome to CryptoDash
+            Welcome to CryptoDash Davids
           </p>
           <a
             className="App-link"
