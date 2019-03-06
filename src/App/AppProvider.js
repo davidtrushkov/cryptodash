@@ -48,9 +48,10 @@ export class AppProvider extends React.Component {
     // Used to disable the coin tile if coin already in favorites bar
     isInFavorites = key => _.includes(this.state.favorites, key)
 
-    // When this component mounts, fetch all the coins from API
+    // When this component mounts, fetch all the coins from API and Prices
     componentDidMount = () => {
         this.fetchCoins();
+        this.fetchPrices();
     }
 
     // Fetch coins from API
@@ -59,11 +60,41 @@ export class AppProvider extends React.Component {
         this.setState({coinList});
     }
 
+    fetchPrices = async () => {
+        if (this.state.firstVisit) return
+        let prices = await this.prices();
+        this.setState({prices});
+    }
+
+    prices = async () => {
+        // Set "returnData" to an empty array
+        let returnData = [];
+
+        // Do a for loop over a users "favorites" crypto coins
+        for (let i = 0; i < this.state.favorites.length; i++) {
+            // Try to get the price data from API
+            try {
+                // Take in symbol and currency of coin
+                let priceData = await cc.priceFull(this.state.favorites[i], 'USD');
+
+                // Then push the data into "returnData"
+                returnData.push(priceData);
+
+                // Else if we have error, log error
+            } catch (e) {
+                console.log('Fetch price error: ', e);
+            }
+        }
+        return returnData;
+    }
+
     // Confirm your favorite coins by setting them in local storage 
     confirmFavorites = () => {
         this.setState({
             firstVisit: false,
             page: 'dashboard'
+        }, () => {
+            this.fetchPrices();
         });
 
         localStorage.setItem('cryptoDash', JSON.stringify({
