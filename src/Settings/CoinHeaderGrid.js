@@ -1,7 +1,6 @@
 import React from 'react';
-import {AppContext} from '../App/AppProvider';
 import {DeletableTile} from '../Shared/Tile';
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 
 export const CoinHeaderGridStyled = styled.div`
